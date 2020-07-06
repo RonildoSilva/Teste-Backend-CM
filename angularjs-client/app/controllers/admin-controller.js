@@ -31,7 +31,7 @@ controller('AdminController', function($scope, $http){
     
     $http({
       method: 'DELETE',
-      url: 'http://localhost:4001/company/'+id
+      url: 'http://localhost:4001/company/' + id
       })
       .then(function(response) {
         // success
@@ -66,12 +66,14 @@ controller('AdminController', function($scope, $http){
   }
 
   $scope.updateCompany = async function () {
+    const id = $scope.selectedCompany;
+
     $http({
       method: "PUT",
       data: { 
-        'name' : $scope.currentCompanyName
+        'name' : $scope.companyName
       },
-      url: 'http://localhost:4001/company/'
+      url: 'http://localhost:4001/company/' + id
       })
       .then(function(response) {
         // success
@@ -82,7 +84,7 @@ controller('AdminController', function($scope, $http){
       });
   }
 
-  $scope.showCompanyInfo = async function() {
+  $scope.getCompanyInfo = async function() {
     const id = $scope.selectedCompany;
     $http({
       method: 'GET',
@@ -114,7 +116,7 @@ controller('AdminController', function($scope, $http){
   }
 
   /*** Products */
-  $scope.showProductInfo = async function() {
+  $scope.getProductInfo = async function() {
     const id = $scope.selectedProduct;
 
     console.log('PR ' + id);
@@ -128,6 +130,10 @@ controller('AdminController', function($scope, $http){
     },function (error){
       console.log(error);
     }); 
+  }
+
+  $scope.toggleProductForm = function () {
+    $scope.stateProductForm = !$scope.stateProductForm;
   }
 
   $scope.createProduct = async function () {
@@ -151,8 +157,28 @@ controller('AdminController', function($scope, $http){
       });
   }
 
-  $scope.toggleProductForm = function () {
-    $scope.stateProductForm = !$scope.stateProductForm;
+  $scope.toggleUpdateProductForm = function () {
+    $scope.stateUpdateProductForm = !$scope.stateUpdateProductForm;
+  }
+  
+  $scope.updateProduct = async function () {
+    const id = $scope.selectedProduct;
+
+    $http({
+      method: "PUT",
+      data: { 
+        'name' : $scope.currentProduct.name,
+        'company_id' : $scope.selectedCompany
+      },
+      url: 'http://localhost:4001/product/' + id
+      })
+      .then(function(response) {
+        // success
+        $scope.showProdutsByCompany();
+      }, 
+      function(response) { // optional
+        // failed
+      });
   }
 
   $scope.deleteProduct = async function() {
@@ -160,7 +186,7 @@ controller('AdminController', function($scope, $http){
     
     $http({
       method: 'DELETE',
-      url: 'http://localhost:4001/product/'+id
+      url: 'http://localhost:4001/product/' + id
       })
       .then(function(response) {
         // success

@@ -148,7 +148,8 @@
                         </a>
 
                         <!-- Update Company -->
-                        <a class="btn btn-danger" ng-click="toggleUpdateCompanyForm();"
+                        <a class="btn btn-danger" ng-click="toggleUpdateCompanyForm(); 
+                          getCompanyInfo(selectedCompany);"
                           alt="Update a selected Company" href="#">
                           <i class="fa fa-edit"></i>
                         </a>
@@ -160,7 +161,7 @@
                         </a>
 
                         <!-- Company Info -->
-                        <a class="btn btn-info" ng-click="showCompanyInfo(selectedCompany);"
+                        <a class="btn btn-info" ng-click="getCompanyInfo(selectedCompany);"
                           alt="Show Company Info" href="#"
                           data-toggle="modal" data-target="#companyModal">
                           <i class="fa fa-info-circle"></i>
@@ -181,17 +182,15 @@
                           ng-click="createCompany(); toggleCompanyForm();">Submit</button>
                         </form>
                       </div>
-
+                      
                       <!-- Form update a Company -->
-                      <div class="card-header py-3" ng-show="stateUpdateCompanyForm">
+                      <div class="card-header py-3" ng-show="stateUpdateCompanyForm" >
                         <h5>Update company information:</h5>
                         <form>
                         <div class="form-group" ng-model="selectedCompany">
                             <label for="ucname">Company name:</label>
-                            <input type="text" id="ucname" class="form-control" required
-
-                            />
-                            <span>### {{selectedCompany}} @@@</span>
+                            <input type="text" id="ucname" class="form-control" 
+                              ng-model="companyName" required />
                         </div>
                         <button type="button" class="btn btn-primary"
                           ng-click="updateCompany(); toggleUpdateCompanyForm();">Submit</button>
@@ -251,7 +250,8 @@
                       </a>
 
                       <!-- Update Product -->
-                      <a class="btn btn-danger" ng-click="toggleUpdateProductForm();"
+                      <a class="btn btn-danger" ng-click="getProductInfo(selectedProduct); 
+                        toggleUpdateProductForm();"
                         alt="Update a selected Product" href="#">
                         <i class="fa fa-edit"></i>
                       </a>
@@ -283,6 +283,21 @@
                         ng-click="createProduct(selectedCompany); toggleProductForm();">Submit</button>
                       </form>
                     </div>
+
+                    <!-- Form update a Product -->
+                    <div class="card-header py-3" ng-show="stateUpdateProductForm" >
+                      <h5>Update product information:</h5>
+                      <form>
+                      <div class="form-group" ng-model="selectedProduct">
+                          <label for="upname">Company name:</label>
+                          <input type="text" id="upname" class="form-control" 
+                            ng-model="currentProduct.name" required />
+                      </div>
+                      <button type="button" class="btn btn-primary"
+                        ng-click="updateProduct(currentProduct.name); toggleUpdateProductForm();">Submit</button>
+                      </form>
+                    </div>
+
                   </div>
                 </div>
                 
