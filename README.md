@@ -115,6 +115,14 @@ Runnig on 8000 port.
 ![src2](screens/src2.png)
 ![src3](screens/src3.png)
 
+## Solution Architecture
+```
+│ SUPORT VIEW  │   │  HTTP RESQ. │   │ PERSIST │
+________________________________________________
+│  CONTROLLER  │   │   SERVICES  │   │  PGSQL  │
+│ AdminControl │---│ CompanyServ │---│ Company │
+│              │   │ ProductServ │   │ Product │
+```
+
 ## Miscellaneous
 - `kill_port.sh` is a Shell script to close the connections of a especific port.
-

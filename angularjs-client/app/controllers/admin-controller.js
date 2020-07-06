@@ -1,45 +1,33 @@
 'use strict';
 
 // Declare app level module which depends on views, and core components
-angular.module('myApp', [
+var app = angular.module('myApp', [
   'ngRoute',
   'myApp.version'
-]).
-controller('AdminController', function($scope, $http){
+]);
 
-  $scope.companies = [];
-  $scope.currentCompany = null;
+app.controller('AdminController', [
+  '$scope', '$http', 'CompanyService', 'ProductService',
+function($scope, $http, CompanyService, ProductService){
 
-  $scope.products = [];
-  $scope.currentProduct = null;
+  /* Services */
+  $scope.CompanyService = CompanyService;  
+  $scope.ProductService = ProductService;
 
-  $scope.loadCompanies = async function() {
-    $http({
-      method: 'GET',
-      url: 'http://localhost:4001/companies/'
-    })
-    .then(function (response){
-      $scope.companies = response.data;
-      console.log(response.data);
-    },function (error){
-      console.log(error);
-    });
+
+  /* Company Services */
+  $scope.createCompany = async function(){
+    $scope.CompanyService.createCompany($scope.companyName);
+    await $scope.loadCompanies();
   }
 
-  $scope.deleteCompany = async function() {
-    const id = $scope.selectedCompany;
-    
-    $http({
-      method: 'DELETE',
-      url: 'http://localhost:4001/company/' + id
-      })
-      .then(function(response) {
-        // success
-        $scope.loadCompanies();
-      }, 
-      function(response) { // optional
-        // failed
-      });
+  $scope.deleteCompany = async function(){
+    $scope.CompanyService.deleteCompany($scope.selectedCompany);
+    await $scope.loadCompanies();
+  }
+
+  $scope.updateCompany = function(){
+    $scope.CompanyService.updateCompany($scope.selectedCompany, $scope.companyName);
   }
 
   $scope.toggleCompanyForm = function () {
@@ -50,40 +38,6 @@ controller('AdminController', function($scope, $http){
     $scope.stateUpdateCompanyForm = !$scope.stateUpdateCompanyForm;
   }
 
-  $scope.createCompany = async function () {
-    $http({
-      method: "POST",
-      data: { 'name' : $scope.companyName },
-      url: 'http://localhost:4001/company/'
-      })
-      .then(function(response) {
-        // success
-        $scope.loadCompanies();
-      }, 
-      function(response) { // optional
-        // failed
-      });
-  }
-
-  $scope.updateCompany = async function () {
-    const id = $scope.selectedCompany;
-
-    $http({
-      method: "PUT",
-      data: { 
-        'name' : $scope.companyName
-      },
-      url: 'http://localhost:4001/company/' + id
-      })
-      .then(function(response) {
-        // success
-        $scope.loadCompanies();
-      }, 
-      function(response) { // optional
-        // failed
-      });
-  }
-
   $scope.getCompanyInfo = async function() {
     const id = $scope.selectedCompany;
     $http({
@@ -91,9 +45,7 @@ controller('AdminController', function($scope, $http){
       url: 'http://localhost:4001/company/' + id
     })
     .then(function (response){
-      //$scope.currentCompany = response.data[0];
       $scope.currentCompany = response.data;
-      //console.log('Selected: ' + JSON.stringify(response.data));
     },function (error){
       console.log(error);
     }); 
@@ -108,6 +60,7 @@ controller('AdminController', function($scope, $http){
     })
     .then(function (response){
       $scope.products = response.data;
+      console.log('load');
       console.log(response.data);
     },function (error){
       console.log(error);
@@ -115,7 +68,36 @@ controller('AdminController', function($scope, $http){
    
   }
 
-  /*** Products */
+  $scope.loadCompanies = async function() {
+    $http({
+      method: 'GET',
+      url: 'http://localhost:4001/companies/'
+    })
+    .then(function (response){
+      $scope.companies = response.data;
+      console.log(response.data);
+    },function (error){
+      console.log(error);
+    });
+  }
+
+  /* Product Services */
+  $scope.createProduct = async function () {
+    await $scope.ProductService.createProduct($scope.productName, $scope.selectedCompany);
+    $scope.showProdutsByCompany();
+  }
+
+  $scope.updateProduct = async function () {
+    await $scope.ProductService.updateProduct($scope.selectedProduct, 
+      $scope.currentProduct.name, $scope.selectedCompany);
+    $scope.showProdutsByCompany();
+  }
+
+  $scope.deleteProduct = async function() {
+    await $scope.ProductService.deleteProduct($scope.selectedProduct);
+    $scope.showProdutsByCompany();
+  }
+
   $scope.getProductInfo = async function() {
     const id = $scope.selectedProduct;
 
@@ -133,74 +115,19 @@ controller('AdminController', function($scope, $http){
   }
 
   $scope.toggleProductForm = function () {
+    $scope.CompanyService.createCompany($scope.companyName, $scope.selectedCompany);
     $scope.stateProductForm = !$scope.stateProductForm;
-  }
-
-  $scope.createProduct = async function () {
-    
-    const id = $scope.selectedCompany;
-
-    $http({
-      method: "POST",
-      data: {
-        'name' : $scope.productName,
-        'company_id' : id,
-       },
-      url: 'http://localhost:4001/product/'
-      })
-      .then(function(response) {
-        // success
-        $scope.showProdutsByCompany();
-      }, 
-      function(response) { // optional
-        // failed
-      });
   }
 
   $scope.toggleUpdateProductForm = function () {
     $scope.stateUpdateProductForm = !$scope.stateUpdateProductForm;
   }
-  
-  $scope.updateProduct = async function () {
-    const id = $scope.selectedProduct;
 
-    $http({
-      method: "PUT",
-      data: { 
-        'name' : $scope.currentProduct.name,
-        'company_id' : $scope.selectedCompany
-      },
-      url: 'http://localhost:4001/product/' + id
-      })
-      .then(function(response) {
-        // success
-        $scope.showProdutsByCompany();
-      }, 
-      function(response) { // optional
-        // failed
-      });
-  }
+}]);
 
-  $scope.deleteProduct = async function() {
-    const id = $scope.selectedProduct;
-    
-    $http({
-      method: 'DELETE',
-      url: 'http://localhost:4001/product/' + id
-      })
-      .then(function(response) {
-        // success
-        $scope.showProdutsByCompany();
-      }, 
-      function(response) { // optional
-        // failed
-      });
-  }
-
-}).config(
+app.config(
   ['$locationProvider', '$routeProvider',
   function($locationProvider, $routeProvider) {
     $locationProvider.hashPrefix('!');
   }
 ]);
-
