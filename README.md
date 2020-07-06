@@ -11,7 +11,9 @@ root
 │       │   script.sql
 │   
 └───angularjs-client
-    │   
+│    │
+│   
+└───screens
 ```
 
 ## Database modeling
@@ -64,6 +66,31 @@ Listening on 4001 port.
     - `/product/:id` : delete product by id.
 - PUT
     - `/product/:id` : update a product by id.
+
+#### Swagger Documentaion
+The following snippet shows a documentation subset:
+
+```
+/**
+ * @swagger
+ * /api/company/{id}:
+ *   put:
+ *     tags: Company
+ *     description: Updates a single company
+ *     produces: application/json
+ *     parameters:
+ *       name: company
+ *       in: body
+ *       description: Fields for the Company resource
+ *       schema:
+ *         type: array
+ *         $ref: '#/definitions/Company'
+ *     responses:
+ *       200:
+ *         description: Successfully updated
+ */
+router.put('/company/:id', updateCompanyById);
+```
 
 ## AngularJS Frontend
 `angularjs-client` folder
