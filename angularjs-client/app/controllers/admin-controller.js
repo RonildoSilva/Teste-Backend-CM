@@ -60,8 +60,6 @@ function($scope, $http, CompanyService, ProductService){
     })
     .then(function (response){
       $scope.products = response.data;
-      console.log('load');
-      console.log(response.data);
     },function (error){
       console.log(error);
     });
@@ -75,7 +73,6 @@ function($scope, $http, CompanyService, ProductService){
     })
     .then(function (response){
       $scope.companies = response.data;
-      console.log(response.data);
     },function (error){
       console.log(error);
     });
@@ -108,7 +105,6 @@ function($scope, $http, CompanyService, ProductService){
     })
     .then(function (response){
       $scope.currentProduct = response.data[0];
-      console.log('Selected: ' + JSON.stringify(response.data));
     },function (error){
       console.log(error);
     }); 
