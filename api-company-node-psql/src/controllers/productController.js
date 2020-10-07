@@ -5,7 +5,7 @@ const pool = new Pool ({
     user: 'postgres',
     password: 'postgres',
     port: '5432',
-    databaset: 'company_control_api'
+    database: 'company_control_api'
 });
 
 const getProducts = async (request, response) => {

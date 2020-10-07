@@ -31,7 +31,11 @@ root
 *`PRODUCTS.company_id` is a FK for `COMPANY.id`*
 
 ### Import data
-`$ psql -h hostname -d company_control_api -U username -f script.sql`
+- `psql -h localhost -d company_control_api -U postgres -f script.sql`
+
+## Accsses DBMS
+- `sudo -u postgres psql`
+- `ALTER USER postgres WITH PASSWORD 'postgres';`
 
 ## NodeJS Backend - RESTFul` api-company-node-psql` folder
 Listening on 4001 port.
